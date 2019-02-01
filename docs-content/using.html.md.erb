@@ -1,17 +1,63 @@
 ---
-title: Using YOUR-PRODUCT-NAME
+title: Using SnappyData Service for PCF
 owner: Partners
 ---
 
 <strong><%= modified_date %></strong>
 
-This topic describes how to use YOUR-PRODUCT-NAME.
+This topic describes how to create and bind a service instance of SnappyData.
 
-##<a id='using'></a> Using YOUR-PRODUCT-NAME
+##<a id='createserinst'></a> Create and Bind a Service Instance Using the cf CLI
 
-**This topic should include any instructions for how to use the service or dashboard created by the tile. 
-Give procedures for how to perform the different functions offered by your product and provide screenshots where necessary.** 
+To create a SnappyData service instance using the cf CLI, perform the following steps:
 
-**You can also use this section to include information about Architecture and Troubleshooting for known errors. 
-If you include a Troubleshooting section, follow the Symptom/Explanation format used in the 
-[Okta Troubleshooting](http://docs.pivotal.io/p-identity/okta/troubleshooting.html) topic**.
+1.	Set your API endpoint to the Cloud Controller of your deployment.
+
+		$ cf api api.YOUR-SYSTEM-DOMAIN
+		Setting api endpoint to api.YOUR-SYSTEM-DOMAIN...
+		OK
+		API endpoint:  https://api.YOUR-SYSTEM-DOMAIN (API version: 2.59.0)
+		Not logged in. Use 'cf login' to log in.
+		
+2.	Login to your deployment and select an org and a space.
+
+		$ cf login
+		API endpoint: https://api.YOUR-SYSTEM-DOMAIN
+		Email> user@example.com
+		Password>
+
+3.	List the services and locate the SnappyData service.
+
+		$ cf marketplace
+		Getting services from marketplace in org system / space apps-manager as admin...
+		OK
+
+
+		service          plans                       description
+		SnappyData       snappy_plan1, ...           Service Broker implementation for SnappyData database
+
+
+
+		TIP:  Use 'cf marketplace -s SERVICE' to view descriptions of individual plans of a given service.
+
+4.	Create an instance of the SnappyData service, specifying both the name of the service plan and the name of the service instance.
+
+		$ cf create-service SnappyData YOUR-SERVICE-PLAN SNAPPY-Instance
+
+5.	Bind the instance to your application.
+
+		$ cf bind-service snappy-app SNAPPY-Instance
+		Binding service SNAPPY-Instance to app snappy-app in org example / space development as user@example.com...
+		OK
+		TIP: Use 'cf restage snappy-app' to ensure your env variable changes take effect
+
+6.	Finally restart the app so that the access details of the service are available to it via the environment variable **VCAP_SERVICES**.
+
+		$ cf restage snappy-app
+        
+        OR
+
+        $ cf restart snappy-app
+
+    The details include locator hostname and port, lead hostname and jobserver port among other parameters.
+
