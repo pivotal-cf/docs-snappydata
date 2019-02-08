@@ -7,16 +7,21 @@ owner: SnappyData Inc.
 
 <p class="note warning">
 <strong>WARNING! </strong>
-This Service for PCF tile is currently in beta and is intended for evaluation and test purposes only. 
+The SnappyData Service for PCF integration is currently in beta and is intended for evaluation and test purposes only. 
 Do not use this product in a PCF production environment.
 </p>
 
-This documentation describes SnappyData Service for Pivotal Cloud Foundry (PCF). SnappyData provides in-memory based computation as well as storage which can be used for purposes such as stream processing, interactive analytics etc. SnappyData Service for PCF enables developers to manage clusters, run queries, submit jobs for their PCF apps from the SnappyData Pulse UI. 
+This documentation describes SnappyData Service for Pivotal Cloud Foundry (PCF). 
+SnappyData provides in-memory based computation as well as storage, 
+which can be used for purposes such as stream processing, interactive analytics, and more. 
+SnappyData Service for PCF enables developers to manage clusters, run queries, and submit 
+jobs for their PCF apps from the SnappyData Pulse UI. 
 <To Do: Just a placeholder introduction. Need to add appropriate content to this.>
 
 ## <a id='overview'></a>Overview
 
-[SnappyData](http://www.snappydata.io) fuses Apache Spark with an in-memory database to deliver a compute plus data engine that is capable of 
+[SnappyData](http://www.snappydata.io) fuses Apache Spark with an in-memory database to 
+deliver a compute plus data engine that is capable of 
 stream processing, transactions, interactive analytics, and prediction in a single cluster.
 
 ## <a id='features'></a>Key Features
@@ -32,7 +37,7 @@ SnappyData Service for PCF includes the following key features:
 - Engine for serving predictions
 - Extended support for Kubernetes and fully certified for PKS
 - HA through distributed consensus based replication
-- Support for semi-structured data : Nested data objects, Graph and JSON data
+- Support for semi-structured data : Nested data objects, Graph, and JSON data
 - Framework for Change-data-capture and streaming ETL
 - Built-in support for Notebook based development (both Zeppelin and Jupyter)
 - Data prep web tool for self-service data cataloging and prep. 
@@ -45,7 +50,8 @@ SnappyData Service for PCF includes the following key features:
 
 The following table provides version and version-support information about SnappyData Service for PCF.
 
-Note that the version 1.0.3-hotfix.1 is the same as released version 1.0.2.1 but as per [semver](http://www.semver.org).
+<p class='note'><strong>Note:</strong>Note that the version 1.0.3-hotfix.1 is the same as released version 1.0.2.1 but as per <a href="http://www.semver.org">semver</a>.</p>
+
 
 <table class="nice">
     <th>Element</th>
@@ -56,11 +62,15 @@ Note that the version 1.0.3-hotfix.1 is the same as released version 1.0.2.1 but
     </tr>
     <tr>
         <td>Release date</td>
-        <td>February 2, 2019</td>
+        <td>February 14, 2019</td>
     </tr>
     <tr>
-        <td>Compatible SnappyData version(s)</td>
+        <td>SnappyData Component version(s)</td>
         <td>1.0.2.1</td>
+    </tr>
+    <tr>
+        <td>Compatible Pivotal Container Service version(s)</td>
+        <td>v1.2.x and v1.3.x</td>
     </tr>
     <tr>
         <td>IaaS support</td>
