@@ -19,7 +19,7 @@ To create a SnappyData service instance using the cf CLI, perform the following 
 		API endpoint:  https://api.YOUR-SYSTEM-DOMAIN (API version: 2.59.0)
 		Not logged in. Use 'cf login' to log in.
 		
-2.	Login to your deployment and select an org and a space.
+2.	Log in to your deployment and select an org and a space.
 
 		$ cf login
 		API endpoint: https://api.YOUR-SYSTEM-DOMAIN
@@ -51,7 +51,7 @@ To create a SnappyData service instance using the cf CLI, perform the following 
 		OK
 		TIP: Use 'cf restage snappy-app' to ensure your env variable changes take effect
 
-6.	Finally restart the app so that the access details of the service are available to it via the environment variable **VCAP_SERVICES**.
+6.	Finally, restart the app so that the access details of the service are available to it via the environment variable **VCAP_SERVICES**.
 
 		$ cf restage snappy-app
         
