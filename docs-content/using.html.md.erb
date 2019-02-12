@@ -44,6 +44,8 @@ To create a SnappyData service instance using the cf CLI, perform the following 
 
 		$ cf create-service SnappyData YOUR-SERVICE-PLAN SNAPPY-Instance
 
+    This command launches the SnappyData cluster in your Kubernetes environment. 
+
 5.	Bind the instance to your application.
 
 		$ cf bind-service snappy-app SNAPPY-Instance
