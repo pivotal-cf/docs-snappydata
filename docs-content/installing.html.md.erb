@@ -29,3 +29,63 @@ This adds the tile to your staging area.
 1. Return to the Ops Manager Installation Dashboard and click **Apply changes** to install SnappyData Service for PCF (beta) tile.
 
 
+##<a id='deploykubernetes'></a> Deploying SnappyData on Kubernetes 
+
+**SnappyData Helm** chart is used to deploy SnappyData on Kubernetes.  It uses Kubernetes [statefulsets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/) to launch the locator, lead, and server members. 
+
+**To deploy SnappyData on Kubernetes:**
+
+1.	Clone the **spark-on-k8s** repository and change to **charts** directory.</br>
+`git clone https://github.com/SnappyDataInc/spark-on-k8s`</br>
+`cd spark-on-k8s/charts`
+
+3.	Optionally, you can edit the **snappydata > values.yaml**  file to change the default configurations in the SnappyData chart. Configurations can be specified in the respective attributes for locators, leaders, and servers in this file. Refer [List of Configuration Parameters for SnappyData Chart](#chartparameters)
+
+4.	Install the **snappydata** chart using the following command:</br>
+`helm install --name snappydata --namespace snappy ./snappydata/`
+
+	The above command installs the SnappyData chart in a namespace called *snappy* and displays the Kubernetes objects (service, statefulsets etc.) created by the chart on the console.</br>
+    By default, **SnappyData Helm** chart deploys a SnappyData cluster which consists of one locator, one lead, two servers, and services to access SnappyData endpoints.
+
+You can monitor the Kubernetes UI dashboard to check the status of the components as it takes few minutes for all the servers to be online. To access the Kubernetes UI refer to the instructions [here](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/#accessing-the-dashboard-ui). 
+
+SnappyData chart dynamically provisions volumes for servers, locators, and leads. These volumes and the data in it are retained even after the chart deployment is deleted.
+
+###<a id='chartparameters'></a>List of Configuration Parameters for SnappyData Chart
+
+You can modify the **values.yaml**  file to configure the SnappyData chart. The following table lists the configuration parameters available for this chart:
+
+| Parameter| Description | Default |
+| ---------| ------------| --------|
+| `image` |  Docker repo from which the SnappyData Docker image is pulled.    |  `snappydatainc/snappydata`   |
+| `imageTag` |  Tag of the SnappyData Docker image that is pulled. |   |
+| `imagePullPolicy` | Pull policy for the image.  | `IfNotPresent` |
+| `locators.conf` | List of the configuration options that is passed to the locators. | |
+| `locators.resources` | Resource configuration for the locator Pods. User can configure CPU/memory requests and limit the usage. | `locators.requests.memory` is set to `1024Mi`. |
+| `locators.persistence.storageClass` | Storage class that is used while dynamically provisioning a volume. | Default value is not defined so `default` storage class for the cluster is chosen.  |
+| `locators.persistence.accessMode` | [Access mode](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes) that is used for the dynamically provisioned volume. | `ReadWriteOnce` |
+| `locators.persistence.size` | Size of the dynamically provisioned volume. | `10Gi` |
+| `servers.replicaCount` | Number of servers that are started in a SnappyData cluster. | `2` |
+| `servers.conf` | List of the configuration options that are passed to the servers. | |
+| `servers.resources` | Resource configuration for the server Pods. You can configure CPU/memory requests and limit the usage. | `servers.requests.memory` is set to `4096Mi` |
+| `servers.persistence.storageClass` | Storage class that is used while dynamically provisioning a volume. | Default value is not defined so `default` storage class for the cluster will be chosen.  |
+| `servers.persistence.accessMode` | [Access mode](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes) for the dynamically provisioned volume. | `ReadWriteOnce` |
+| `servers.persistence.size` | Size of the dynamically provisioned volume. | `10Gi` |
+| `leaders.conf` | List of configuration options that can be passed to the leaders. | |
+| `leaders.resources` | Resource configuration for the server pods. You can configure CPU/memory requests and limits the usage. | `leaders.requests.memory` is set to `4096Mi` |
+| `leaders.persistence.storageClass` | Storage class that is used while dynamically provisioning a volume. | Default value is not defined so `default` storage class for the cluster will be chosen.  |
+| `leaders.persistence.accessMode` | [Access mode](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes) for the dynamically provisioned volume. | `ReadWriteOnce` |
+| `leaders.persistence.size` | Size of the dynamically provisioned volume. | `10Gi` |
+
+
+The following sample shows the configuration used to start four servers each with a heap size of 2048 MB:
+
+```
+servers:
+  replicaCount: 4
+  ## config options for servers
+  conf: "-heap-size=2048m"
+```
+
+You can specify SnappyData [configuration parameters](https://snappydatainc.github.io/snappydata/configuring_cluster/configuring_cluster/#configuration-files) in the **servers.conf**, **locators.conf**, and **leaders.conf** attributes for servers, locators, and leaders respectively.
+
