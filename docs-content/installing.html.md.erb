@@ -1,53 +1,36 @@
 ---
-title: Installing and Configuring SnappyData Service for PCF (Beta)
+title: Installing and Configuring SnappyData Service for PKS (Beta)
 owner: Partners
 ---
 
 <strong><%= modified_date %></strong>
 
-This topic describes how to install and configure SnappyData Service for PCF (beta).
+This topic describes how to configure and install SnappyData cluster on PKS and expose it via Kubernetes services.
 
-##<a id='install'></a> Install and Configure SnappyData Service for PCF (Beta)
+##<a id='install'></a> Download SnappyData Service for PKS (Beta)
 
-To install the SnappyData Service for PCF (beta) file on the Ops Manager Installation Dashboard, do the following:
+1. Download and extract the SnappyData product Helm Chart package from [Pivotal Network](https://network.pivotal.io/).
 
-1. Download the product file from Pivotal Network.
-
-1. Navigate to the Ops Manager Installation Dashboard and click **Import a Product** to upload the product file. 
-
-1. Under the **Import a Product** button, click **+** next to the version number of SnappyData Service for PCF (beta). 
-This adds the tile to your staging area.
-
-1. Click the newly added **SnappyData Service for PCF (beta)** tile.
-
-1. Under **Settings** tab, click **Assign AZs and Networks** and select the appropriate AZ and network for your tile.
-
-1. Click **Kubernetes** and provide the details of your Kubernetes cluster such as **CA cert**, **Cluster URL**, and **Cluster Token**.
-
-1. Click **Save**.
-
-1. Return to the Ops Manager Installation Dashboard and click **Apply changes** to install SnappyData Service for PCF (beta) tile.
+2. Extract the downloaded Helm Chart package on your local work environment.
 
 
-##<a id='deploykubernetes'></a> Deploying SnappyData on Kubernetes 
+##<a id='deploykubernetes'></a> Deploying SnappyData on PKS 
 
-**SnappyData Helm** chart is used to deploy SnappyData on Kubernetes.  It uses Kubernetes [statefulsets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/) to launch the locator, lead, and server members. 
+The **SnappyData Helm chart** uses Kubernetes [statefulsets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/) to launch the locator, lead, and server members. 
 
-**To deploy SnappyData on Kubernetes:**
+**To deploy SnappyData on PKS:**
 
-1.	Clone the **spark-on-k8s** repository and change to **charts** directory.</br>
-`git clone https://github.com/SnappyDataInc/spark-on-k8s`</br>
-`cd spark-on-k8s/charts`
+1.	Before launching the SnappyData Service on PKS, you can optionally edit the **snappydata > values.yaml**  file to change the default configurations in the SnappyData chart.
+	Configurations can be specified in the respective attributes for locators, leaders, and servers in this file. Refer [List of Configuration Parameters for SnappyData Chart](#chartparameters).
 
-3.	Optionally, you can edit the **snappydata > values.yaml**  file to change the default configurations in the SnappyData chart. Configurations can be specified in the respective attributes for locators, leaders, and servers in this file. Refer [List of Configuration Parameters for SnappyData Chart](#chartparameters)
+2.	Deploy the **snappydata** chart using the following command:</br>
 
-4.	Install the **snappydata** chart using the following command:</br>
-`helm install --name snappydata --namespace snappy ./snappydata/`
+	`helm install --name snappydata --namespace snappy ./snappydata/`
 
-	The above command installs the SnappyData chart in a namespace called *snappy* and displays the Kubernetes objects (service, statefulsets etc.) created by the chart on the console.</br>
+	The above command installs the SnappyData chart - effectively launches the SnappyData cluster - within a namespace called *snappy* and displays the Kubernetes objects (service, statefulsets etc.) created by the chart on the console.</br>
     By default, **SnappyData Helm** chart deploys a SnappyData cluster which consists of one locator, one lead, two servers, and services to access SnappyData endpoints.
 
-You can monitor the Kubernetes UI dashboard to check the status of the components as it takes few minutes for all the servers to be online. To access the Kubernetes UI refer to the instructions [here](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/#accessing-the-dashboard-ui). 
+You can monitor the Kubernetes UI dashboard to check the status of the components as it takes few minutes for all the servers to be live. To access the Kubernetes UI refer to the instructions [here](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/#accessing-the-dashboard-ui). 
 
 SnappyData chart dynamically provisions volumes for servers, locators, and leads. These volumes and the data in it are retained even after the chart deployment is deleted.
 
@@ -78,13 +61,13 @@ You can modify the **values.yaml**  file to configure the SnappyData chart. The 
 | `leaders.persistence.size` | Size of the dynamically provisioned volume. | `10Gi` |
 
 
-The following sample shows the configuration used to start four servers each with a heap size of 2048 MB:
+The following sample shows the configuration used to start four servers each with a heap size of 4096 MB:
 
 ```
 servers:
   replicaCount: 4
   ## config options for servers
-  conf: "-heap-size=2048m"
+  conf: "-heap-size=4096m"
 ```
 
 You can specify SnappyData [configuration parameters](https://snappydatainc.github.io/snappydata/configuring_cluster/configuring_cluster/#configuration-files) in the **servers.conf**, **locators.conf**, and **leaders.conf** attributes for servers, locators, and leaders respectively.
