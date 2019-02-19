@@ -5,40 +5,44 @@ owner: Partners
 
 <strong><%= modified_date %></strong>
 
-This topic describes how to configure and install a SnappyData cluster on PKS and expose it via Kubernetes services.
+This topic describes how to configure and install a SnappyData cluster on Pivotal Container Service (PKS) and expose it via Kubernetes services.
 
 ##<a id='install'></a> Download SnappyData Service for PCF (PKS) (Beta)
 
 1. Download the SnappyData product Helm Chart package from [Pivotal Network](https://network.pivotal.io/).
 
-2. Extract the downloaded Helm Chart package on your local work environment.
+2. Extract the downloaded Helm Chart package on your local machine.
 
 
-##<a id='deploykubernetes'></a> Deploying SnappyData on PKS 
+##<a id='deploykubernetes'></a> Deploy SnappyData on PKS 
 
-The **SnappyData Helm chart** uses Kubernetes [statefulsets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/) to launch the locator, lead, and server processes in the SnappyData cluster. 
+The SnappyData Helm chart uses Kubernetes [statefulsets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/) to launch the locator, lead, and server processes in the SnappyData cluster. 
 
-**To deploy SnappyData on PKS:**
+To deploy SnappyData on PKS, perform the following steps:
 
-1.	Before you launch the SnappyData Service on PKS, you can optionally edit the **snappydata > values.yaml**  file to change the default configurations in the SnappyData chart.
-	Configurations can be specified in the respective attributes for locators, leaders, and servers in this file. Refer [List of Configuration Parameters for SnappyData Chart](#chartparameters).
+1. (Optional) Before you launch the SnappyData Service on PKS, you can optionally edit the `snappydata > values.yaml`  file to change the default configurations in the SnappyData chart.
+	<br><br>
+	Configurations can be specified in the respective attributes for locators, leaders, and servers in this file. For more information, see [List of Configuration Parameters for SnappyData Chart](#chartparameters).
 
-2.	Deploy the **snappydata** chart using the following command:</br>
+2. Run the following command to deploy the SnappyData Helm chart:
 
+	```
+	helm install --name snappydata --namespace snappy ./snappydata/
+	```
+	<br>
+    This command launches the SnappyData cluster within a namespace called `snappy` and displays the Kubernetes objects created by the SnappyData Helm chart in the console.
+	<br><br>
+	The process takes a few minutes to complete before the servers are available. You can monitor the Kubernetes Dashboard to check the status of the components. 
+	<br><br>
+    By default, the SnappyData Helm chart deploys a SnappyData cluster which consists of one locator, one lead, two servers, and services to access SnappyData endpoints.
 
-	`helm install --name snappydata --namespace snappy ./snappydata/`
-
-	
-    The above command installs the SnappyData chart -effectively launches the SnappyData cluster- within a namespace called *snappy* and displays the Kubernetes objects (service, statefulsets etc.) created by the chart on the console.</br>
-    By default, **SnappyData Helm** chart deploys a SnappyData cluster which consists of one locator, one lead, two servers, and services to access SnappyData endpoints.
-
-You can monitor the Kubernetes UI dashboard to check the status of the components as it takes few minutes for all the servers to be live. To access the Kubernetes UI, refer to the instructions [here](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/#accessing-the-dashboard-ui). 
+For more information about accessing the Kubernetes Dashboard, see [Accessing the Dashboard UI](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/#accessing-the-dashboard-ui) in the Kubernetes documentation.
 
 SnappyData chart dynamically provisions volumes for servers, locators, and leads. These volumes and the data in it are retained even after the chart deployment is deleted.
 
 ###<a id='chartparameters'></a>List of Configuration Parameters for SnappyData chart
 
-You can modify the **values.yaml**  file to configure the SnappyData chart. The following table lists the configuration parameters available for this chart:
+You can modify the `values.yaml`  file to configure the SnappyData chart. The following table lists the configuration parameters available for this chart:
 
 | Parameter| Description | Default |
 | ---------| ------------| --------|
@@ -63,7 +67,7 @@ You can modify the **values.yaml**  file to configure the SnappyData chart. The 
 | `leaders.persistence.size` | Size of the dynamically provisioned volume. | `10Gi` |
 
 
-The following sample shows the configuration used to start four servers each with a heap size of 4096 MB:
+The following sample shows the configuration used to start four servers, each with a heap size of 4096 MB:
 
 ```
 servers:
@@ -72,5 +76,5 @@ servers:
   conf: "-heap-size=4096m"
 ```
 
-You can specify SnappyData [configuration parameters](https://snappydatainc.github.io/snappydata/configuring_cluster/configuring_cluster/#configuration-files) in the **servers.conf**, **locators.conf**, and **leaders.conf** attributes for servers, locators, and leaders respectively.
+You can specify SnappyData [configuration parameters](https://snappydatainc.github.io/snappydata/configuring_cluster/configuring_cluster/#configuration-files) in the `servers.conf`, `locators.conf`, and `leaders.conf` attributes for servers, locators, and leaders respectively.
 

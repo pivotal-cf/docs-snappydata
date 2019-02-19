@@ -5,15 +5,15 @@ owner: Partners
 
 <strong><%= modified_date %></strong>
 
-This topic describes how to interact with a SnappyData cluster on PKS which is exposed via Kubernetes services, how to connect to the SnappyData cluster using JDBC driver, and how to submit SnappyData jobs. 
+This topic describes how to interact with a SnappyData cluster on Pivotal Container Service (PKS) which is exposed via Kubernetes services, how to connect to the SnappyData cluster using JDBC driver, and how to submit SnappyData jobs. 
 		
 
 ##<a id='interacting'></a> Interact with SnappyData Cluster on PKS
 
-SnappyData Helm chart creates services that allow you to make JDBC connections and execute SnappyData jobs on the cluster. It also allows you to access [SnappyData Pulse](#accesskubernetes) which is the dashboard UI.
-Services of the type LoadBalancer have external IP address assigned and can be used to connect from outside of PKS cluster.
+The SnappyData Helm chart creates services that allow you to make JDBC connections and execute SnappyData jobs on the cluster. It also allows you to access [SnappyData Pulse](#accesskubernetes), which is the dashboard UI.
+Services of the type `LoadBalancer` have external IP address assigned and can be used to connect from outside of the PKS cluster.
 
-<a id= output> </a>To check the services created for SnappyData deployment, use command `kubectl get svc --namespace=snappy`. The following output is displayed:
+<a id= output> </a>To check the services created for SnappyData deployment, run the command `kubectl get svc --namespace=snappy`. The following output is displayed:
 
 
 ```
@@ -27,13 +27,13 @@ snappydata-server-public    LoadBalancer   10.51.248.27    35.232.16.4      1527
 
 ```
 
-In the above output, three services namely **snappydata-leader-public**, **snappydata-locator-public** and **snappydata-server-public** of type **LoadBalancer** are created.
-These services have external IP addresses assigned and therefore can be accessed from outside PKS cluster.
-The remaining services that do not have external IP addresses are those that are created for internal use.
+The above output shows that three services named `snappydata-leader-public`, `snappydata-locator-public` and `snappydata-server-public` of type `LoadBalancer` have been created.
+These services have external IP addresses assigned and therefore can be accessed from outside of the PKS cluster:
 
-+   **snappydata-leader-public** service exposes port **5050** for SnappyData Pulse and port **8090** to accept SnappyData jobs.
-+   **snappydata-locator-public** service exposes port **1527** to accept JDBC connections.
++ The `snappydata-leader-public` service exposes port `5050` for SnappyData Pulse and port `8090` to accept SnappyData jobs.
++  The `snappydata-locator-public` service exposes port `1527` to accept JDBC connections.
 
+The remaining services that do not have external IP addresses are created for internal use.
 
 You can do the following on the SnappyData cluster that is deployed on PKS cluster:
 
@@ -45,97 +45,97 @@ You can do the following on the SnappyData cluster that is deployed on PKS clust
 
 ###<a id='jdbckubernetes'></a> Connect using JDBC Driver
 
-For PKS deployments, JDBC clients can connect to SnappyData cluster using the JDBC URL that is derived from the **snappydata-locator-public** service.
+For PKS deployments, JDBC clients can connect to SnappyData cluster using the JDBC URL that is derived from the `snappydata-locator-public` service.
 
-**To connect to SnappyData using JDBC driver in PKS:**
+To connect to SnappyData using JDBC driver in PKS, perform the following steps:
 
-1.	Check the SnappyData services running in PKS cluster.</br>
-    `kubectl get svc --namespace=snappy`</br>
+1. Check the SnappyData services running in PKS cluster by running the following command with the `kubectl` CLI:
 
-    From the displayed output, note the external IP address of the **snappydata-locator-public** service and the port number **1527** for external connections.
+    ```
+    kubectl get svc --namespace=snappy
+    ```
+    <br>
+    From the output, note the external IP address of the `snappydata-locator-public` service and the port number `1527` for external connections.
 
-        ```
-        NAME                        TYPE           CLUSTER-IP      EXTERNAL-IP      PORT(S)                                        AGE
-        snappydata-leader           ClusterIP      None            <none>           5050/TCP                                       5m
-        snappydata-leader-public    LoadBalancer   10.51.255.175   35.232.102.51    5050:31964/TCP,8090:32700/TCP,3768:32575/TCP   5m
-        snappydata-locator          ClusterIP      None            <none>           10334/TCP,1527/TCP                             5m
-        snappydata-locator-public   LoadBalancer   10.51.241.224   104.198.47.162   1527:31957/TCP                                 5m
-        snappydata-server           ClusterIP      None            <none>           1527/TCP                                       5m
-        snappydata-server-public    LoadBalancer   10.51.248.27    35.232.16.4      1527:31853/TCP                                 5m
+    ```
+    NAME                        TYPE           CLUSTER-IP      EXTERNAL-IP      PORT(S)                                        AGE
+    snappydata-leader           ClusterIP      None            <none>           5050/TCP                                       5m
+    snappydata-leader-public    LoadBalancer   10.51.255.175   35.232.102.51    5050:31964/TCP,8090:32700/TCP,3768:32575/TCP   5m
+    snappydata-locator          ClusterIP      None            <none>           10334/TCP,1527/TCP                             5m
+    snappydata-locator-public   LoadBalancer   10.51.241.224   104.198.47.162   1527:31957/TCP                                 5m
+    snappydata-server           ClusterIP      None            <none>           1527/TCP                                       5m
+    snappydata-server-public    LoadBalancer   10.51.248.27    35.232.16.4      1527:31853/TCP                                 5m
 
-        ```
+    ```
 
-2.	Use this information to form the JDBC URL. For example, based on the above output, the JDBC URL formed is `jdbc:snappydata://104.198.47.162:1527/`.
-	Use this JDBC URL in your application to connect to SnappyData cluster as JDBC client. 
+2.	Use the external IP address and port of the `snappydata-locator-public` service to form the JDBC URL. For example, based on the above output, the JDBC URL is `jdbc:snappydata://104.198.47.162:1527/`.
+3. Use the JDBC URL in your application to connect to SnappyData cluster as JDBC client. 
 
-<p class='note'><strong>Note:</strong> Ensure that you have SnappyData JDBC jar in your application classpath to connect to the cluster as JDBC client.</p>
+<p class='note'><strong>Note:</strong> Ensure that you have the SnappyData JDBC .jar in your application classpath to connect to the cluster as JDBC client.</p>
 
-You can also refer to [SnappyData documentation](http://snappydatainc.github.io/snappydata/howto/connect_using_jdbc_driver/)
-for an example of JDBC program and for instructions on how to obtain JDBC driver using Maven/SBT co-ordinates.
-
+See the [SnappyData documentation](http://snappydatainc.github.io/snappydata/howto/connect_using_jdbc_driver/)
+for an example of a JDBC program, and for instructions on how to obtain JDBC driver using Maven/SBT coordinates.
 
 ###<a id='jobkubernetes'></a> Submit SnappyData Jobs
 
-Refer to the [How Tos section](http://snappydatainc.github.io/snappydata/howto/run_spark_job_inside_cluster/) in SnappyData documentation to understand how to submit SnappyData jobs. However, for submitting a SnappyData job in PKS deployment, you need to use the **snappydata-leader-public** service that exposes port **8090** to run the jobs.
+See the [How Tos](https://snappydatainc.github.io/snappydata/howto/) section in the SnappyData documentation to understand how to submit SnappyData jobs.
 
-**To submit a SnappyData job in PKS deployment:**
+To submit a SnappyData job in a PKS deployment, you use the `snappydata-leader-public` service that exposes port 8090 to run the jobs.
 
-1.	Check the SnappyData services running in PKS cluster.</br>`kubectl get svc --namespace=snappy`</br>
+To submit a SnappyData job in a PKS deployment, perform the following steps:
 
-        ```
-        # check the SnappyData services running in K8S cluster
-        kubectl get svc --namespace=snappy
-        # The following output is displayed:
+1.	Check the SnappyData services running in PKS cluster by running the following command with the `kubectl` CLI: 
 
-        NAME                        TYPE           CLUSTER-IP      EXTERNAL-IP      PORT(S)                                        AGE
-        snappydata-leader           ClusterIP      None            <none>           5050/TCP                                       5m
-        snappydata-leader-public    LoadBalancer   10.51.255.175   35.232.102.51    5050:31964/TCP,8090:32700/TCP,3768:32575/TCP   5m
-        snappydata-locator          ClusterIP      None            <none>           10334/TCP,1527/TCP                             5m
-        snappydata-locator-public   LoadBalancer   10.51.241.224   104.198.47.162   1527:31957/TCP                                 5m
-        snappydata-server           ClusterIP      None            <none>           1527/TCP                                       5m
-        snappydata-server-public    LoadBalancer   10.51.248.27    35.232.16.4      1527:31853/TCP                                 5m
-        ```
+    ```
+    kubectl get svc --namespace=snappy
+    ```
+    From the output, note the external IP address of `snappydata-leader-public` service and port number `8090`.
 
-	From the output displayed, note the external IP address of **snappydata-leader-public** service and port number **8090**.
+    ```
+    NAME                        TYPE           CLUSTER-IP      EXTERNAL-IP      PORT(S)                                        AGE
+    snappydata-leader           ClusterIP      None            <none>           5050/TCP                                       5m
+    snappydata-leader-public    LoadBalancer   10.51.255.175   35.232.102.51    5050:31964/TCP,8090:32700/TCP,3768:32575/TCP   5m
+    snappydata-locator          ClusterIP      None            <none>           10334/TCP,1527/TCP                             5m
+    snappydata-locator-public   LoadBalancer   10.51.241.224   104.198.47.162   1527:31957/TCP                                 5m
+    snappydata-server           ClusterIP      None            <none>           1527/TCP                                       5m
+    snappydata-server-public    LoadBalancer   10.51.248.27    35.232.16.4      1527:31853/TCP                                 5m
+    ```
 
-2.	Change to SnappyData product installation directory. You must have the SnappyData distribution on your local work environment from where you submit SnappyData jobs.
-	
+2.	Change to the SnappyData product installation directory. You must have the SnappyData distribution on your local machine that submits SnappyData jobs.
 
-3.	Submit the job using the external IP of the **snappydata-leader-public** service and the port number **8090** in the **--lead** option.</br> Following is an example of submitting a SnappyData Job:
+3.	Submit the job, using the external IP of the `snappydata-leader-public` service and the port number `8090` as the value for the `--lead` option. For example:
+    <pre class="terminal">
+    $ bin/snappy-job.sh submit
+    --app-name CreatePartitionedRowTable \
+      --class org.apache.spark.examples.snappydata.CreatePartitionedRowTable \
+      --app-jar examples/jars/quickstart.jar \
+      --lead 35.232.102.51:8090
+    </pre>
 
-        ```
-        bin/snappy-job.sh submit
-        --app-name CreatePartitionedRowTable
-          --class org.apache.spark.examples.snappydata.CreatePartitionedRowTable
-          --app-jar examples/jars/quickstart.jar
-          --lead 35.232.102.51:8090
-        ```
+###<a id='accesskubernetes'></a> Access SnappyData Pulse
 
-###<a id='accesskubernetes'></a> Accessing SnappyData Pulse
+You can access the dashboards on the SnappyData Pulse with the `snappydata-leader-public` service. 
 
-The dashboards on the SnappyData Pulse can be accessed using **snappydata-leader-public** service. 
+To access SnappyData Pulse in Kubernetes, perform the following steps:
 
-**To access SnappyData Pulse in Kubernetes:**
+1. Check the SnappyData services running in the Kubernetes cluster by running the following command with the `kubectl` CLI:
 
-1. Check the SnappyData services running in the Kubernetes cluster.</br>
-`kubectl get svc --namespace=snappy`</br> The output displays the external IP address of the **snappydata-leader-public** service as follows:
+    ```
+    kubectl get svc --namespace=snappy
+    ```
+    From the output, note the external IP address of the `snappydata-leader-public` service.
 
-        ```
-        # check the SnappyData services running in K8S cluster
-        kubectl get svc --namespace=snappy
-        # This following output is displayed:
+    ```
+    NAME                        TYPE           CLUSTER-IP      EXTERNAL-IP      PORT(S)                                        AGE
+    snappydata-leader           ClusterIP      None            <none>           5050/TCP                                       5m
+    snappydata-leader-public    LoadBalancer   10.51.255.175   35.232.102.51    5050:31964/TCP,8090:32700/TCP,3768:32575/TCP   5m
+    snappydata-locator          ClusterIP      None            <none>           10334/TCP,1527/TCP                             5m
+    snappydata-locator-public   LoadBalancer   10.51.241.224   104.198.47.162   1527:31957/TCP                                 5m
+    snappydata-server           ClusterIP      None            <none>           1527/TCP                                       5m
+    snappydata-server-public    LoadBalancer   10.51.248.27    35.232.16.4      1527:31853/TCP                                 5m
+    ```
 
-        NAME                        TYPE           CLUSTER-IP      EXTERNAL-IP      PORT(S)                                        AGE
-        snappydata-leader           ClusterIP      None            <none>           5050/TCP                                       5m
-        snappydata-leader-public    LoadBalancer   10.51.255.175   35.232.102.51    5050:31964/TCP,8090:32700/TCP,3768:32575/TCP   5m
-        snappydata-locator          ClusterIP      None            <none>           10334/TCP,1527/TCP                             5m
-        snappydata-locator-public   LoadBalancer   10.51.241.224   104.198.47.162   1527:31957/TCP                                 5m
-        snappydata-server           ClusterIP      None            <none>           1527/TCP                                       5m
-        snappydata-server-public    LoadBalancer   10.51.248.27    35.232.16.4      1527:31853/TCP                                 5m
-
-        ```
-
-2. Type `EXTERNAL-IP:5050` in the browser. Here you must replace **EXTERNAL-IP** with the external IP address of the **leader-public** service.</br> For example, 35.232.102.51:5050.</br> An image of SnappyData Pulse is shown below:
-
-![SnappyData Pulse Dashboard UI](Dashboard.png)   
+3. In a browser, navigate to port 5050 of the external IP address of the `snappydata-leader-public` service. For example, `35.232.102.51:5050`. 
+4. Access the SnappyData Pulse dashboard, as pictured in the screenshot below:
+    ![SnappyData Pulse Dashboard UI](Dashboard.png)   
 
