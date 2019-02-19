@@ -1,5 +1,5 @@
 ---
-title: SnappyData Service for PCF (Beta)
+title: SnappyData Service for PCF (PKS) (Beta)
 owner: SnappyData Inc.
 ---
 
@@ -7,16 +7,19 @@ owner: SnappyData Inc.
 
 <p class="note warning">
 <strong>WARNING! </strong>
-The SnappyData Service for PCF integration is currently in beta and is intended for evaluation and test purposes only. 
+The SnappyData Service for PCF (PKS) integration is currently in beta and is intended for evaluation and test purposes only. 
 Do not use this product in a PCF production environment.
 </p>
 
-This documentation describes SnappyData Service for Pivotal Cloud Foundry (PCF). 
-SnappyData provides in-memory based computation as well as storage, 
-which can be used for purposes such as stream processing and interactive analytics. 
-SnappyData Service for PCF enables developers to manage clusters, run queries, and submit 
-jobs for their PCF apps from the SnappyData Pulse UI. 
-<To Do: Just a placeholder introduction. Need to add appropriate content to this.>
+This documentation describes SnappyData Service for Pivotal Cloud Foundry (PCF) (PKS).
+
+SnappyData is a high performance in-memory data platform for mixed workload applications.
+Built on Apache Spark, SnappyData provides a unified programming model for streaming, transactions, machine learning and SQL Analytics in a single cluster.
+SnappyData unifies real time data sources with external data sources that have a Spark connector.
+
+SnappyData Service for PCF (PKS) enables developers to manage clusters, run queries, and submit 
+jobs for their apps from the SnappyData Pulse UI.
+
 
 ## <a id='overview'></a>Overview
 
@@ -26,7 +29,7 @@ stream processing, transactions, interactive analytics, and prediction in a sing
 
 ## <a id='features'></a>Key Features
 
-SnappyData Service for PCF includes the following key features:
+SnappyData Service for PCF (PKS) includes the following key features:
 
 - High concurrency
 - Low latency, true interactive speeds
@@ -37,18 +40,16 @@ SnappyData Service for PCF includes the following key features:
 - Engine for serving predictions
 - Extended support for Kubernetes and fully certified for PKS
 - HA through distributed consensus based replication
-- Support for semi-structured data : Nested data objects, Graph, and JSON data
+- Support for semi-structured data: Nested data objects, Graph, and JSON data
 - Framework for Change-data-capture and streaming ETL
-- Built-in support for Notebook based development (both Zeppelin and Jupyter)
+- Built-in support for Notebook based development (Zeppelin)
 - Data prep web tool for self-service data cataloging and prep
 - Enterprise grade security (Available only in the Enterprise version)
-
-<To do: The features above are a placeholder. We need to list the key features of the tile (the integration).>
 
 
 ## <a id="snapshot"></a>Product Snapshot
 
-The following table provides version and version-support information about SnappyData Service for PCF.
+The following table provides version and version-support information about SnappyData Service for PCF (PKS).
 
 <p class='note'><strong>Note:</strong> v1.0.3-hotfix.1 is the same as released version 1.0.2.1.</p>
 
@@ -62,7 +63,7 @@ The following table provides version and version-support information about Snapp
     </tr>
     <tr>
         <td>Release date</td>
-        <td>February 14, 2019</td>
+        <td>February 21, 2019</td>
     </tr>
     <tr>
         <td>SnappyData Component version(s)</td>
@@ -70,28 +71,29 @@ The following table provides version and version-support information about Snapp
     </tr>
     <tr>
         <td>Compatible Pivotal Container Service version(s)</td>
-        <td>v1.2.x and v1.3.x</td>
+        <td>v1.2.x and 1.3.x</td>
     </tr>
     <tr>
         <td>IaaS support</td>
-        <td>AWS</td>
+        <td>AWS and GCP</td>
     </tr>
 </table>
 
 
 ## <a id="reqs"></a>Requirements
 
-To install and use SnappyData Service for PCF, you require the following:
+To install and use SnappyData Service for PCF (PKS), you require the following:
 
-+   Pivotal Application Service (formerly Elastic Runtime) v1.12 or later
++   A running PKS v1.2+ cluster
 
-+   A running Kubernetes cluster
++   [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/), a CLI to interact with PKS
+
++   [Helm](https://github.com/helm/helm#helm), a package manager for applications running on PKS
 
 
 ## <a id="feedback"></a>Feedback
 
-If you have a feature request, questions, or information about a bug, please email
-[SnappyData Support](mailto:support@snappydata.io) list.
+If you have a feature request, questions, or information about a bug, please email to [SnappyData Support](mailto:support@snappydata.io) list.
 
 ## <a id='license'></a>License
 
